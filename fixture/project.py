@@ -30,16 +30,28 @@ class ProjectHelper:
         wd.find_element_by_link_text("Zarządzanie").click()
         wd.find_element_by_link_text("Zarządzanie projektami").click()
 
-    def add(self, name, description):
+    def add(self, project):
         wd = self.app.wd
         self.open_projects_page()
         wd.find_element_by_css_selector('input[value="Stwórz nowy projekt"]').click()
         wd.find_element_by_name("name").click()
         wd.find_element_by_name("name").clear()
-        wd.find_element_by_name("name").send_keys(name)
+        wd.find_element_by_name("name").send_keys(project.name)
         wd.find_element_by_name("description").click()
         wd.find_element_by_name("description").clear()
-        wd.find_element_by_name("description").send_keys(description)
+        wd.find_element_by_name("description").send_keys(project.description)
         wd.find_element_by_css_selector('input[value="Dodaj projekt"]').click()
         wd.find_element_by_link_text("Dalej").click()
         self.project_cache = None
+
+    def delete_project_by_id(self, id):
+        wd = self.app.wd
+        self.open_projects_page()
+        self.select_project_by_id(id)
+        wd.find_element_by_css_selector('input[value="Usuń projekt"]').click()
+        wd.find_element_by_css_selector('input[value="Usuń projekt"]').click()
+        self.project_cache = None
+
+    def select_project_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//table[@class='width100']/tbody/tr[starts-with(@class,'row-')]/td/a[@href='manage_proj_edit_page.php?project_id=" + id + "']").click()
